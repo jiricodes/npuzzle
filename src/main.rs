@@ -1,9 +1,12 @@
+#[macro_use]
+extern crate clap;
+
 use rand::{seq::SliceRandom, thread_rng};
 use std::collections::HashSet;
 use std::fmt;
 use text_io::read;
 
-const KEY_PRESS_SLEEP_MS: u64 = 10;
+use clap::{App, Arg};
 
 #[derive(Debug, Hash)]
 struct Board {
@@ -24,6 +27,7 @@ impl Board {
             zero_position: 0,
         };
         new_board.fill_board();
+		new_board.solution = new_board.data.clone();
         new_board
     }
 
@@ -145,30 +149,31 @@ impl Board {
             }
         }
     }
+
     fn get_move(&mut self, key: &str) -> Option<usize> {
         match key {
-            "down" | "d" => {
+            "up" | "u" => {
                 if self.zero_position >= self.width {
                     Some(self.zero_position - self.width)
                 } else {
                     None
                 }
             }
-            "up" | "u" => {
+            "down" | "d" => {
                 if self.zero_position < self.width * (self.height - 1) {
                     Some(self.zero_position + self.width)
                 } else {
                     None
                 }
             }
-            "right" | "r" => {
+            "left" | "l" => {
                 if self.zero_position % self.width > 0 {
                     Some(self.zero_position - 1)
                 } else {
                     None
                 }
             }
-            "left" | "l" => {
+            "right" | "r" => {
                 if self.zero_position % self.width < (self.width - 1) {
                     Some(self.zero_position + 1)
                 } else {
@@ -180,15 +185,21 @@ impl Board {
     }
 
     pub fn play(&mut self) {
+		print!("\x1B[2J\x1B[1;1H");
+        println!("{}", self);
         while self.data != self.solution {
             let input: String = read!("{}\n");
             match input.as_str() {
                 "exit" => {
                     return;
-                }
+                },
                 "help" => {
                     println!("Possible options: up / u, down / d, left / l, right / r, exit, help")
-                }
+                },
+				"solution" => {
+					self.show_solution();
+					continue;
+				},
                 _ => {
                     if let Some(move_to) = self.get_move(input.as_str()) {
                         self.data.swap(move_to, self.zero_position);
@@ -202,6 +213,23 @@ impl Board {
             println!("{}", self);
         }
     }
+
+	fn show_solution(&self) {
+		let mut longest: usize = 0;
+        let mut n = self.width * self.height - 1;
+        while n != 0 {
+            longest += 1;
+            n /= 10;
+        }
+        let mut res = String::new();
+        for i in 0..self.width * self.height {
+            res.push_str(&format!("{:width$} ", self.solution[i], width = longest));
+            if i % self.width == self.width - 1 {
+                res.push_str("\n");
+            }
+        }
+		println!("Solution:\n{}", res);
+	}
 }
 
 impl fmt::Display for Board {
@@ -230,11 +258,34 @@ pub fn is_in_bounds(x: i32, y: i32, left_top: (i32, i32), right_bot: (i32, i32))
 }
 
 fn main() {
-    let n = 5;
+    let args = App::new("npuzzle")
+        .arg(
+            Arg::with_name("size")
+                .short("n")
+                .takes_value(true)
+                .help("Size of the puzzle"),
+        )
+        .arg(
+            Arg::with_name("iterations")
+                .short("i")
+                .long("iterations")
+                .takes_value(true)
+                .help("Shuffle iterations"),
+        )
+        .get_matches();
+    let n = if args.is_present("size") {
+        value_t_or_exit!(args, "size", usize)
+    } else {
+        3
+    };
+    let iterations = if args.is_present("iterations") {
+        value_t_or_exit!(args, "iterations", usize)
+    } else {
+        10
+    };
     let mut board = Board::new(n, n);
     println!("{}", board);
     // dbg!(board);
-    board.shuffle(10);
-    println!("{}", board);
+    board.shuffle(iterations);
     board.play();
 }

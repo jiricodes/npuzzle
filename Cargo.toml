@@ -8,3 +8,4 @@ edition = "2018"
 [dependencies]
 rand = "0.8.4"
 text_io = "0.1.9"
+clap = "2.33.3"
