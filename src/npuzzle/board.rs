@@ -3,6 +3,8 @@ use log::*;
 use rand::{seq::SliceRandom, thread_rng};
 use std::collections::HashSet;
 use std::fmt;
+use std::fs::File;
+use std::io::prelude::*;
 use text_io::read;
 
 #[derive(Debug, Hash)]
@@ -230,7 +232,15 @@ impl Board {
 
 	pub fn from_str(input: &str) -> Result<Board> {
 		info!("Received: {:?}", input);
+		// validate the input here!
 		return Ok(Self::new(3, 3));
+	}
+
+	pub fn from_file(filename: &str) -> Result<Board> {
+		let mut file = File::open(filename)?;
+		let mut contents = String::new();
+		file.read_to_string(&mut contents)?;
+		Board::from_str(&contents)
 	}
 }
 

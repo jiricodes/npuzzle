@@ -6,7 +6,6 @@ use log::*;
 
 mod npuzzle;
 use npuzzle::init_logger;
-use npuzzle::read_input_state_from_file;
 use npuzzle::Board;
 
 fn main() {
@@ -53,8 +52,7 @@ fn main() {
 	};
 	info!("Shuffle iterations set to {}", iterations);
 	let mut board: Board = if args.is_present("infile") {
-		read_input_state_from_file(args.value_of("infile").unwrap())
-			.expect("Reading from given file failed")
+		Board::from_file(args.value_of("infile").unwrap()).expect("Reading from given file failed")
 	} else {
 		Board::new(n, n)
 	};
