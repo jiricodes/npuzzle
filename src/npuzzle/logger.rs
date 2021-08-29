@@ -1,10 +1,11 @@
-use log::*;
 use chrono::{DateTime, Local};
+use log::*;
 
 const LOGGER: Logger = Logger;
 
 struct Logger;
-impl log::Log for Logger {
+impl log::Log for Logger
+ {
     fn enabled(&self, _metadata: &Metadata) -> bool {
         true
     }
