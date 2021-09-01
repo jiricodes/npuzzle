@@ -7,8 +7,9 @@ use log::*;
 mod npuzzle;
 use npuzzle::init_logger;
 use npuzzle::Board;
+use npuzzle::Result;
 
-fn main() {
+fn main() -> Result<()> {
 	let args = App::new("npuzzle")
 		.arg(
 			Arg::with_name("size")
@@ -52,7 +53,7 @@ fn main() {
 	};
 	info!("Shuffle iterations set to {}", iterations);
 	let mut board: Board = if args.is_present("infile") {
-		Board::from_file(args.value_of("infile").unwrap()).expect("Reading from given file failed")
+		Board::from_file(args.value_of("infile").unwrap())?
 	} else {
 		Board::new(n, n)
 	};
@@ -63,4 +64,5 @@ fn main() {
 	if args.is_present("play") {
 		board.play();
 	}
+	return Ok(());
 }
