@@ -1,4 +1,4 @@
-use super::Result;
+use super::{ErrorKind, PuzzleError, Result};
 use log::*;
 use rand::{seq::SliceRandom, thread_rng};
 use std::collections::HashSet;
@@ -213,7 +213,7 @@ impl Board {
 		}
 	}
 
-	fn show_solution(&self) {
+	pub fn show_solution(&self) {
 		let mut longest: usize = 0;
 		let mut n = self.width * self.height - 1;
 		while n != 0 {
@@ -227,20 +227,72 @@ impl Board {
 				res.push_str("\n");
 			}
 		}
-		println!("Solution:\n{}", res);
+		println!("Expected Solution:\n{}", res);
 	}
 
 	pub fn from_str(input: &str) -> Result<Board> {
-		info!("Received: {:?}", input);
-		// validate the input here!
-		return Ok(Self::new(3, 3));
+		let mut board = Board {
+			width: 0,
+			height: 0,
+			data: Vec::new(),
+			solution: Vec::new(),
+			zero_position: 0,
+		};
+		let lines = input.split("\n");
+		for raw_line in lines {
+			let line = clean_line(raw_line);
+			let words: Vec<&str> = line.split_whitespace().collect();
+			if words.len() == 0 {
+				continue;
+			} else if words.len() == 1 && board.width == 0 {
+				if words[0].chars().all(char::is_numeric) {
+					board.width = words[0].parse::<usize>().unwrap();
+					board.height = board.width;
+				} else {
+					return Err(PuzzleError::Puzzle(ErrorKind::InvalidInput));
+				}
+			} else if board.width != 0 && words.len() == board.width {
+				for word in words {
+					if word.chars().all(char::is_numeric) {
+						let val = word.parse::<usize>().unwrap();
+						if val < board.width * board.width && !board.data.contains(&val) {
+							board.data.push(val);
+						} else {
+							return Err(PuzzleError::Puzzle(ErrorKind::InvalidInput));
+						}
+					} else {
+						return Err(PuzzleError::Puzzle(ErrorKind::InvalidInput));
+					}
+				}
+			} else {
+				return Err(PuzzleError::Puzzle(ErrorKind::InvalidInput));
+			}
+		}
+		if let Some(zero_pos) = board.data.iter().position(|&x| x == 0) {
+			board.zero_position = zero_pos;
+		} else {
+			return Err(PuzzleError::Puzzle(ErrorKind::InvalidInput));
+		}
+		let solution_board = Board::new(board.width, board.height);
+		board.solution = solution_board.solution.clone();
+		info!("Board read sucessfully from the file");
+		return Ok(board);
 	}
 
 	pub fn from_file(filename: &str) -> Result<Board> {
 		let mut file = File::open(filename)?;
 		let mut contents = String::new();
 		file.read_to_string(&mut contents)?;
+		// while width and height == 0 search for size in the string
 		Board::from_str(&contents)
+	}
+}
+
+fn clean_line(input_string: &str) -> &str {
+	if let Some(comment) = input_string.find("#") {
+		&input_string[0..comment]
+	} else {
+		input_string
 	}
 }
 

@@ -61,6 +61,7 @@ fn main() -> Result<()> {
 		board.shuffle(iterations);
 	}
 	println!("{}", board);
+	board.show_solution();
 	if args.is_present("play") {
 		board.play();
 	}
