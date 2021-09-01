@@ -249,7 +249,7 @@ impl Board {
 					board.width = words[0].parse::<usize>().unwrap();
 					board.height = board.width;
 				} else {
-					return Err(PuzzleError::Puzzle(ErrorKind::InvalidInput));
+					return Err(PuzzleError::Puzzle(ErrorKind::InvalidChar));
 				}
 			} else if board.width != 0 && words.len() == board.width {
 				for word in words {
@@ -258,20 +258,20 @@ impl Board {
 						if val < board.width * board.width && !board.data.contains(&val) {
 							board.data.push(val);
 						} else {
-							return Err(PuzzleError::Puzzle(ErrorKind::InvalidInput));
+							return Err(PuzzleError::Puzzle(ErrorKind::InvalidValue));
 						}
 					} else {
-						return Err(PuzzleError::Puzzle(ErrorKind::InvalidInput));
+						return Err(PuzzleError::Puzzle(ErrorKind::InvalidChar));
 					}
 				}
 			} else {
-				return Err(PuzzleError::Puzzle(ErrorKind::InvalidInput));
+				return Err(PuzzleError::Puzzle(ErrorKind::InvalidNoSize));
 			}
 		}
 		if let Some(zero_pos) = board.data.iter().position(|&x| x == 0) {
 			board.zero_position = zero_pos;
 		} else {
-			return Err(PuzzleError::Puzzle(ErrorKind::InvalidInput));
+			return Err(PuzzleError::Puzzle(ErrorKind::InvalidNoZero));
 		}
 		let solution_board = Board::new(board.width, board.height);
 		board.solution = solution_board.solution.clone();

@@ -14,18 +14,47 @@ pub enum PuzzleError {
 	Custom(String),
 }
 
-#[derive(Clone, Copy, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
+#[derive(Clone, Copy, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub enum ErrorKind {
 	InvalidInput,
+	InvalidNoSize,
+	InvalidChar,
+	InvalidValue,
+	InvalidNoZero,
 	Unsolvable,
 }
 
 impl ErrorKind {
 	fn as_str(&self) -> &str {
 		match *self {
-			ErrorKind::InvalidInput => "Invalid N-puzzle state",
+			ErrorKind::InvalidInput => "Invalid N-puzzle state: General Error",
+			ErrorKind::InvalidNoSize => "Invalid N-puzzle state: No size given",
+			ErrorKind::InvalidChar => "Invalid N-puzzle state: Invalid character",
+			ErrorKind::InvalidValue => {
+				"Invalid N-puzzle state: Invalid value - too high or duplicate"
+			}
+			ErrorKind::InvalidNoZero => "Invalid N-puzzle state: Invalid value - zero not found",
 			ErrorKind::Unsolvable => "Given state is unsolvable",
 		}
+	}
+
+	fn err_name(&self) -> &str {
+		match *self {
+			ErrorKind::InvalidNoSize
+			| ErrorKind::InvalidInput
+			| ErrorKind::InvalidChar
+			| ErrorKind::InvalidValue
+			| ErrorKind::InvalidNoZero => "InvalidInput",
+			ErrorKind::Unsolvable => "Unsolvable",
+		}
+	}
+}
+
+impl fmt::Debug for ErrorKind {
+	fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+		f.debug_struct(self.err_name())
+			.field("message", &self.as_str())
+			.finish()
 	}
 }
 
@@ -52,7 +81,7 @@ impl From<clap::Error> for PuzzleError {
 	}
 }
 
-impl Error for PuzzleError {}
+// impl Error for PuzzleError {}
 
 #[cfg(test)]
 mod test {
