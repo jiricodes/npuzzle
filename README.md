@@ -15,8 +15,8 @@ The goal is to find solution to given [N-puzzle](https://en.wikipedia.org/wiki/1
     - [ ] from raw to vec<vec<T>>
     - [ ] input validation
 - [ ] Generator
-    - [ ] generates custom states
-        - currently broken
+    - [x] generates custom states
+        - [ ] test well!
     - [x] generates expected solution
 - [ ] Solver
     - [ ] multiple implementations based on the algo
