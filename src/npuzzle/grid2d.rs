@@ -1,5 +1,6 @@
 //! 2D grid representation of the problem
 use super::grid_traits::Grid;
+use log::*;
 use std::cmp::PartialEq;
 use std::fmt;
 use std::ops::{Add, Sub};
@@ -160,6 +161,17 @@ impl Grid for Grid2D {
 
     fn from_2dvec(&mut self, data: Vec<Vec<usize>>) {
         self.data = data;
+        // gotta set the zero position LOL!
+        for r in 0..self.height {
+            for c in 0..self.width {
+                if self.data[r][c] == 0 {
+                    self.zero_position = Coords(r as i32, c as i32);
+                    return;
+                }
+            }
+        }
+        warn!("No zero found, maybe consider fixing it!");
+        panic!("no zero in data set");
     }
 }
 

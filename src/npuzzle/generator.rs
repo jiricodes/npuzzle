@@ -199,7 +199,8 @@ mod test {
     fn test_grid2d() {
         let g = Grid2D::new(5, 5);
         let mut gen = Generator::new(g, PuzzleType::Snail);
-        gen.generate_solution();
+        // gen.generate_solution();
+        gen.generate_random(10);
         println!("{}", gen.get_grid());
     }
 }
