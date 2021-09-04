@@ -1,3 +1,4 @@
+use super::utils::is_in_bounds;
 use super::{ErrorKind, PuzzleError, Result};
 use log::*;
 use rand::{seq::SliceRandom, thread_rng};
@@ -313,10 +314,4 @@ impl fmt::Display for Board {
 		}
 		write!(f, "{}", res)
 	}
-}
-
-// inclusive
-#[inline]
-pub fn is_in_bounds(x: i32, y: i32, left_top: (i32, i32), right_bot: (i32, i32)) -> bool {
-	x >= left_top.0 && x <= right_bot.0 && y >= left_top.1 && y <= right_bot.1
 }
