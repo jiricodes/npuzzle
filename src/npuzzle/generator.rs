@@ -65,10 +65,24 @@ fn snail_template(width: usize, height: usize) -> Vec<Vec<usize>> {
 }
 
 fn lines00_template(width: usize, height: usize) -> Vec<Vec<usize>> {
-    unimplemented!()
+    let mut grid: Vec<Vec<usize>> = Vec::with_capacity(height);
+    for r in 0..height {
+        grid.push(Vec::new());
+        for c in 0..width {
+            grid[r].push(r * width + c);
+        }
+    }
+    grid
 }
 fn linesnn_template(width: usize, height: usize) -> Vec<Vec<usize>> {
-    unimplemented!()
+    let mut grid: Vec<Vec<usize>> = Vec::with_capacity(height);
+    for r in 0..height {
+        grid.push(Vec::new());
+        for c in 0..width {
+            grid[r].push((r * width + c + 1) % (width * height));
+        }
+    }
+    grid
 }
 
 pub struct Generator<G>
@@ -148,6 +162,30 @@ mod test {
         expected.push(vec![15, 24, 0, 20, 7]);
         expected.push(vec![14, 23, 22, 21, 8]);
         expected.push(vec![13, 12, 11, 10, 9]);
+        assert_eq!(expected, g);
+    }
+
+    #[test]
+    fn test_lines00_template() {
+        let g = lines00_template(5, 5);
+        let mut expected: Vec<Vec<usize>> = Vec::with_capacity(5);
+        expected.push(vec![0, 1, 2, 3, 4]);
+        expected.push(vec![5, 6, 7, 8, 9]);
+        expected.push(vec![10, 11, 12, 13, 14]);
+        expected.push(vec![15, 16, 17, 18, 19]);
+        expected.push(vec![20, 21, 22, 23, 24]);
+        assert_eq!(expected, g);
+    }
+
+    #[test]
+    fn test_sn_template() {
+        let g = linesnn_template(5, 5);
+        let mut expected: Vec<Vec<usize>> = Vec::with_capacity(5);
+        expected.push(vec![1, 2, 3, 4, 5]);
+        expected.push(vec![6, 7, 8, 9, 10]);
+        expected.push(vec![11, 12, 13, 14, 15]);
+        expected.push(vec![16, 17, 18, 19, 20]);
+        expected.push(vec![21, 22, 23, 24, 0]);
         assert_eq!(expected, g);
     }
 }
