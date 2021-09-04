@@ -85,6 +85,7 @@ fn linesnn_template(width: usize, height: usize) -> Vec<Vec<usize>> {
     grid
 }
 
+/// Probably worth reworking to use mut ref for grid rather than cloned
 pub struct Generator<G>
 where
     G: Grid + Hash + Eq + Clone,
@@ -102,13 +103,13 @@ where
     }
 
     /// wrapper for generating a solution state and shuffling it
-    pub fn generate(&mut self, iterations: usize) {
-        self.solution();
+    pub fn generate_random(&mut self, iterations: usize) {
+        self.generate_solution();
         self.shuffle(iterations);
     }
 
     /// should create the "default state" aka solution
-    pub fn solution(&mut self) {
+    pub fn generate_solution(&mut self) {
         let (width, height) = self.grid.dim();
         let grid_2d = self.puzzletype.get_template(width, height);
         self.grid.from_2dvec(grid_2d);
@@ -147,10 +148,15 @@ where
             }
         }
     }
+
+    pub fn get_grid(&self) -> G {
+        self.grid.clone()
+    }
 }
 
 #[cfg(test)]
 mod test {
+    use super::super::grid2d::Grid2D;
     use super::*;
 
     #[test]
@@ -187,5 +193,13 @@ mod test {
         expected.push(vec![16, 17, 18, 19, 20]);
         expected.push(vec![21, 22, 23, 24, 0]);
         assert_eq!(expected, g);
+    }
+
+    #[test]
+    fn test_grid2d() {
+        let g = Grid2D::new(5, 5);
+        let mut gen = Generator::new(g, PuzzleType::Snail);
+        gen.generate_solution();
+        println!("{}", gen.get_grid());
     }
 }

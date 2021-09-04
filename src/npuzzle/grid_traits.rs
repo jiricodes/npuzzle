@@ -11,15 +11,18 @@ pub trait Grid {
     fn possible_moves(&self) -> Vec<Self::M>;
     /// To make a move aka swap positions
     /// Output is a success indicator
-    fn do_move(&mut self, movement: &Self::M) -> bool;
+    fn do_move(&mut self, dir: &Self::M) -> bool;
 
     /// To unmake a move
     /// Output is a success indicator
-    fn undo_move(&mut self, movement: &Self::M) -> bool;
+    fn undo_move(&mut self, dir: &Self::M) -> bool;
 
     /// To set a value
     /// bool for success
     fn set_value(&mut self, position: Self::P, value: usize) -> bool;
+
+    /// To get a value
+    fn get_value(&self, position: Self::P) -> Option<usize>;
 
     /// Returns (width, height)
     fn dim(&self) -> (usize, usize);

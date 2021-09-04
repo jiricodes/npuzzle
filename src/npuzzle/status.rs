@@ -1,6 +1,6 @@
 use clap;
 use std::cmp::{PartialEq, PartialOrd};
-use std::error::Error;
+
 use std::fmt;
 use std::io;
 
@@ -85,7 +85,7 @@ impl From<clap::Error> for PuzzleError {
 
 #[cfg(test)]
 mod test {
-	use super::*;
+	// use super::*;
 
 	#[test]
 	fn basic() {
