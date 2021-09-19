@@ -6,6 +6,9 @@ use log::*;
 
 use std::fmt;
 
+use super::Board;
+use super::Result;
+
 #[non_exhaustive]
 #[derive(Debug)]
 enum PuzzleMode {
@@ -47,8 +50,8 @@ impl fmt::Display for PuzzleMode {
 #[derive(Debug)]
 pub struct Launcher {
     mode: PuzzleMode,
-    size: usize,
-    iters: usize,
+    size: Option<usize>,
+    iters: Option<usize>,
     input_file: Option<String>,
 }
 
@@ -59,18 +62,20 @@ impl Launcher {
                 Arg::with_name("size")
                     .short("n")
                     .takes_value(true)
-                    .default_value("3")
                     .conflicts_with("infile")
                     .value_name("SIZE")
+                    .required_unless("infile")
+                    .conflicts_with("infile")
                     .help("Size of the puzzle"),
             )
             .arg(
                 Arg::with_name("iterations")
                     .short("i")
-                    .default_value("10")
                     .value_name("NUM")
                     .long("iterations")
                     .takes_value(true)
+                    .required_unless("infile")
+                    .conflicts_with("infile")
                     .help("Shuffle iterations"),
             )
             .arg(
@@ -89,11 +94,21 @@ impl Launcher {
                     .long("file")
                     .takes_value(true)
                     .value_name("FILE")
+                    .required_unless("size")
+                    .conflicts_with("size")
                     .help("Reads the intial state from given file"),
             )
             .get_matches();
-        let size = value_t_or_exit!(args, "size", usize);
-        let iters = value_t_or_exit!(args, "iterations", usize);
+        let size = if args.is_present("size") {
+            Some(value_t_or_exit!(args, "size", usize))
+        } else {
+            None
+        };
+        let iters = if args.is_present("iterations") {
+            Some(value_t_or_exit!(args, "iterations", usize))
+        } else {
+            None
+        };
         let input_file = if args.is_present("infile") {
             Some(String::from(args.value_of("infile").unwrap()))
         } else {
@@ -109,16 +124,28 @@ impl Launcher {
             input_file,
         }
     }
+
+    /// Gets game board based on parsed arguments
+    /// panics if both size and input_file are None
+    /// or if size is Some and iterations is None
+    pub fn get_board(&self) -> Result<Board> {
+        if self.input_file.is_some() {
+            Board::from_file(self.input_file.as_ref().unwrap())
+        } else {
+            let n = self.size.unwrap();
+            let mut board = Board::new(n, n);
+            board.shuffle(self.iters.unwrap());
+            Ok(board)
+        }
+    }
 }
 
 impl fmt::Display for Launcher {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "N-puzzle launcher:\nMode: {}", self.mode)?;
-        write!(f, "Size: {}", self.size)?;
-        write!(f, "Iterations: {}", self.iters)?;
-        if self.input_file.is_some() {
-            write!(f, "Iput File: {}", self.input_file.as_ref().unwrap())?;
-        }
+        write!(f, "N-puzzle launcher:\nMode: {}\n", self.mode)?;
+        write!(f, "Size: {:?}\n", self.size)?;
+        write!(f, "Iterations: {:?}\n", self.iters)?;
+        write!(f, "Iput File: {:?}\n", self.input_file)?;
         Ok(())
     }
 }
