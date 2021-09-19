@@ -9,9 +9,9 @@ use std::fmt;
 use super::Board;
 use super::Result;
 
+#[derive(Debug, Copy, Clone)]
 #[non_exhaustive]
-#[derive(Debug)]
-enum PuzzleMode {
+pub enum PuzzleMode {
     Play,
     Solve,
     Generate,
@@ -58,6 +58,9 @@ pub struct Launcher {
 impl Launcher {
     pub fn new() -> Self {
         let args = App::new(crate_name!())
+            .author(crate_authors!())
+            .version(crate_version!())
+            .about("N-puzzle solver. Project within ecole 42 curriculum at Hive Helsinki")
             .arg(
                 Arg::with_name("size")
                     .short("n")
@@ -137,6 +140,10 @@ impl Launcher {
             board.shuffle(self.iters.unwrap());
             Ok(board)
         }
+    }
+
+    pub fn get_mode(&self) -> PuzzleMode {
+        self.mode
     }
 }
 

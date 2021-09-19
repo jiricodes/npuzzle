@@ -21,6 +21,7 @@ pub enum ErrorKind {
     InvalidChar,
     InvalidValue,
     InvalidNoZero,
+    InvalidMode, // should never happen technically
     Unsolvable,
 }
 
@@ -35,6 +36,7 @@ impl ErrorKind {
             }
             ErrorKind::InvalidNoZero => "Invalid N-puzzle state: Invalid value - zero not found",
             ErrorKind::Unsolvable => "Given state is unsolvable",
+            ErrorKind::InvalidMode => "Invalid program mode",
         }
     }
 
@@ -44,7 +46,8 @@ impl ErrorKind {
             | ErrorKind::InvalidInput
             | ErrorKind::InvalidChar
             | ErrorKind::InvalidValue
-            | ErrorKind::InvalidNoZero => "InvalidInput",
+            | ErrorKind::InvalidNoZero
+            | ErrorKind::InvalidMode => "InvalidInput",
             ErrorKind::Unsolvable => "Unsolvable",
         }
     }

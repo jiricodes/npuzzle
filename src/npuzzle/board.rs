@@ -184,6 +184,7 @@ impl Board {
         }
     }
 
+    /// would be better outside board strucy
     pub fn play(&mut self) {
         print!("\x1B[2J\x1B[1;1H");
         println!("{}", self);
@@ -286,6 +287,13 @@ impl Board {
         file.read_to_string(&mut contents)?;
         // while width and height == 0 search for size in the string
         Board::from_str(&contents)
+    }
+
+    pub fn as_output_string(&self) -> String {
+        format!(
+            "# by github.com/jiricodes/npuzzle\n{}\n{}",
+            self.width, *self
+        )
     }
 }
 

@@ -7,13 +7,13 @@ The goal is to find solution to given [N-puzzle](https://en.wikipedia.org/wiki/1
 ## Notes / Todo
 ### Organisation
 - [ ] Launcher
-    - [ ] pars args
-    - [ ] handle setup
+    - [x] pars args
+    - [x] handle setup
     - [ ] handle solver init
     - [ ] handle output format
-- [ ] Input Handler
-    - [ ] from raw to vec<vec<T>>
-    - [ ] input validation
+- [x] Input Handler
+    - [x] from raw to vec<vec<T>>
+    - [x] input validation
 - [ ] Generator
     - [x] generates custom states
         - [ ] test well!
