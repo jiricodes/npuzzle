@@ -16,7 +16,8 @@ You have to "git clone" the repository, and grade what's on it,
 AND ONLY WHAT IS ON IT.
 
 # Attachments
- subject.en  Puzzle generator
+- [Subject](npuzzle.en.pdf)
+- [Puzzle generator](res_npuzzle-gen.py)
 
 # First and foremost
 ## Preliminary checks

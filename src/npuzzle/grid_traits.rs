@@ -1,33 +1,31 @@
 //! Generic traits for possible grid implmentations
 //! will allow 2d vec, graph, linked lists or whatever
-//!
-//! Consider having PuzzleErrors as return values instead of bools
+
+use super::status::Result;
 
 pub trait Grid {
-    type M; // moves
-    type P; // position
+	type M; // moves
+	type P; // position
 
-    /// To get vector of possible moves
-    fn possible_moves(&self) -> Vec<Self::M>;
-    /// To make a move aka swap positions
-    /// Output is a success indicator
-    fn do_move(&mut self, dir: &Self::M) -> bool;
+	/// To get vector of possible moves
+	fn possible_moves(&self) -> Vec<Self::M>;
 
-    /// To unmake a move
-    /// Output is a success indicator
-    fn undo_move(&mut self, dir: &Self::M) -> bool;
+	/// To make a move aka swap positions
+	fn do_move(&mut self, dir: &Self::M) -> Result<()>;
 
-    /// To set a value
-    /// bool for success
-    fn set_value(&mut self, position: Self::P, value: usize) -> bool;
+	/// To unmake a move
+	fn undo_move(&mut self, dir: &Self::M) -> Result<()>;
 
-    /// To get a value
-    fn get_value(&self, position: Self::P) -> Option<usize>;
+	/// To set a value
+	fn set_value(&mut self, position: Self::P, value: usize) -> Result<()>;
 
-    /// Returns (width, height)
-    fn dim(&self) -> (usize, usize);
+	/// To get a value
+	fn get_value(&self, position: Self::P) -> Result<usize>;
 
-    /// retrieves data for its internal structure from 2d vector
-    /// Consider if single vector is sufficient in use cases
-    fn from_2dvec(&mut self, data: Vec<Vec<usize>>);
+	/// Returns (width, height)
+	fn dim(&self) -> (usize, usize);
+
+	/// retrieves data for its internal structure from 2d vector
+	/// Consider if single vector is sufficient in use cases
+	fn from_2dvec(&mut self, data: Vec<Vec<usize>>) -> Result<()>;
 }
