@@ -4,6 +4,7 @@ pub use launcher::Launcher;
 pub use logger::init_logger;
 pub use status::{ErrorKind, PuzzleError, Result};
 
+pub mod astar;
 pub mod board;
 pub mod generator;
 pub mod grid2d;

@@ -5,7 +5,7 @@ use std::cmp::PartialEq;
 use std::fmt;
 use std::ops::{Add, Sub};
 
-use super::status::{ErrorKind, PuzzleError, Result};
+use super::{ErrorKind, PuzzleError, Result};
 
 #[derive(Debug, Clone, Copy)]
 pub enum Direction {
