@@ -1,5 +1,5 @@
-use super::utils::is_in_bounds;
-use super::{ErrorKind, PuzzleError, Result};
+use crate::utils::is_in_bounds;
+use crate::utils::status::{ErrorKind, PuzzleError, Result};
 use log::*;
 use rand::{seq::SliceRandom, thread_rng};
 use std::collections::HashSet;

@@ -1,14 +1,21 @@
-[package]
-name = "npuzzle"
-version = "0.1.0"
-edition = "2018"
-authors = ["Jiri Novotny <jiricodes.com>", "Okko Hakola <github.com/hakolao>"]
+# [package]
+# name = "npuzzle"
+# version = "0.1.0"
+# edition = "2018"
+# authors = ["Jiri Novotny <jiricodes.com>", "Okko Hakola <github.com/hakolao>"]
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+# # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
-[dependencies]
-rand = "0.8.4"
-text_io = "0.1.9"
-clap = "2.33.3"
-log = "0.4.14"
-chrono = "0.4.19"
+# [dependencies]
+# rand = "0.8.4"
+# text_io = "0.1.9"
+# clap = "2.33.3"
+# log = "0.4.14"
+# chrono = "0.4.19"
+[workspace]
+members = [
+	"npuzzle_lib/",
+	"npuzzle_cli/",
+	"npuzzle_vis/"
+]
+resolver = "2"

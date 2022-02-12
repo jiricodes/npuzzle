@@ -3,12 +3,14 @@ extern crate clap;
 
 use log::*;
 
-mod npuzzle;
-use npuzzle::init_logger;
-use npuzzle::launcher::PuzzleMode;
-use npuzzle::Board;
-use npuzzle::Launcher;
-use npuzzle::{ErrorKind, PuzzleError, Result};
+mod logger;
+use logger::init_logger;
+
+mod launcher;
+use launcher::{Launcher, PuzzleMode};
+
+use npuzzle_lib::board::Board;
+use npuzzle_lib::utils::status::{ErrorKind, PuzzleError, Result};
 
 fn main() -> Result<()> {
 	// Initialize logger - default to debug level, lets adjust it with arguments later
