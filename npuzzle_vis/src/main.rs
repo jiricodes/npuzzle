@@ -1,4 +1,5 @@
 use bevy::prelude::*;
+use npuzzle_lib::board::Board;
 
 pub struct Npuzzle;
 
@@ -16,6 +17,9 @@ const SIZE: f32 = 5.0;
 const BACKGROUND: Color = Color::rgba(0.15, 0.15, 0.15, 0.9);
 const MARGIN: f32 = TILE_SIZE * 0.05;
 const WIN_SIZE: f32 = MARGIN * (SIZE + 1.0) + TILE_SIZE * SIZE;
+
+// Animaitons
+const TIME_STEP: f32 = 1.0 / 60.0;
 
 #[derive(Component)]
 struct Tile;
@@ -91,8 +95,10 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
 }
 
 fn main() {
+	let mut board = Board::new(SIZE as usize, SIZE as usize);
 	App::new()
 		.add_plugins(DefaultPlugins)
+		.insert_resource(board)
 		.add_plugin(Npuzzle)
 		.run();
 }

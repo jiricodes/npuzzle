@@ -2,6 +2,7 @@
 //!
 
 pub mod status;
+
 /// Checks if given coordinates x, y are within the limits (inclusive)
 ///
 /// Example:
