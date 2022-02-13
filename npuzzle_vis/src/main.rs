@@ -29,6 +29,8 @@ struct Value(usize);
 
 impl Plugin for Npuzzle {
 	fn build(&self, app: &mut App) {
+		let mut board = Board::new(SIZE as usize, SIZE as usize);
+		println!("{}", board);
 		app.insert_resource(ClearColor(BACKGROUND))
 			.insert_resource(WindowDescriptor {
 				width: WIN_SIZE,
@@ -39,6 +41,7 @@ impl Plugin for Npuzzle {
 				decorations: false,
 				..Default::default()
 			})
+			.insert_resource(board)
 			.add_startup_system(camera_setup)
 			.add_startup_system(setup);
 	}
@@ -48,7 +51,7 @@ fn camera_setup(mut commands: Commands) {
 	commands.spawn_bundle(OrthographicCameraBundle::new_2d());
 }
 
-fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
+fn setup(mut commands: Commands, asset_server: Res<AssetServer>, board: Res<Board>) {
 	let font_handle: Handle<Font> = asset_server.load(FONT_PATH);
 	let text_style = TextStyle {
 		font: font_handle,
@@ -60,17 +63,19 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
 		horizontal: HorizontalAlign::Center,
 	};
 	let start_x = -WIN_SIZE / 2.0 + MARGIN + TILE_SIZE / 2.0;
-	let start_y = -WIN_SIZE / 2.0 + MARGIN + TILE_SIZE / 2.0;
+	let start_y = WIN_SIZE / 2.0 + MARGIN + TILE_SIZE / 2.0;
 	for row in 0..SIZE as usize {
 		for col in 0..SIZE as usize {
-			let value = row * SIZE as usize + col;
+			let index = row * SIZE as usize + col;
+			let value = board.idx_value(index);
 			let label = format!("{}", value);
+			println!("[{}]: {}", index, label);
 			commands
 				.spawn_bundle(SpriteBundle {
 					transform: Transform {
 						translation: Vec3::new(
 							start_x + (TILE_SIZE + MARGIN) * col as f32,
-							start_y + (TILE_SIZE + MARGIN) * row as f32,
+							start_y - (TILE_SIZE + MARGIN) * row as f32,
 							0.0,
 						),
 						..Default::default()
@@ -95,10 +100,8 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
 }
 
 fn main() {
-	let mut board = Board::new(SIZE as usize, SIZE as usize);
 	App::new()
 		.add_plugins(DefaultPlugins)
-		.insert_resource(board)
 		.add_plugin(Npuzzle)
 		.run();
 }

@@ -31,6 +31,9 @@ impl Board {
 		new_board
 	}
 
+	pub fn idx_value(&self, i: usize) -> usize {
+		self.data[i]
+	}
 	fn get_index(&self, col: usize, row: usize) -> usize {
 		col + row * self.width
 	}
