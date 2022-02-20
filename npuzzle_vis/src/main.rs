@@ -10,12 +10,12 @@ pub struct Npuzzle;
 
 // Tiles
 const TILE_SIZE: f32 = 100.0;
-const TILE_COLOR: Color = Color::rgb(0.75, 0.5, 0.5);
+const TILE_COLOR: Color = Color::rgb(108.0 / 255.0, 74.0 / 255.0, 74.0 / 255.0);
 
 // Font
 const FONT_PATH: &str = "fonts/VCR_OSD_MONO.ttf";
 const FONT_SIZE: f32 = 60.0;
-const FONT_COLOR: Color = Color::rgb(1.0, 1.0, 1.0);
+const FONT_COLOR: Color = Color::rgb(237.0 / 255.0, 237.0 / 255.0, 237.0 / 255.0);
 
 // Puzzle
 const SIZE: f32 = 5.0;
@@ -180,7 +180,7 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>, grid: Res<Grid2
 						..Default::default()
 					},
 					visibility: Visibility {
-						is_visible: true, //value != 0,
+						is_visible: value != 0,
 					},
 					..Default::default()
 				})
