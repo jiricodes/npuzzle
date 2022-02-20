@@ -46,8 +46,6 @@ struct Value(usize);
 
 type MoveQueue = VecDeque<Direction>;
 
-struct MoveEvent(Direction);
-
 fn tile_size_system(win: Res<Windows>, mut q: Query<(&TileSize, &mut Sprite), With<Tile>>) {
 	let w = win.get_primary().unwrap().width() as f32;
 	let h = win.get_primary().unwrap().height() as f32;
@@ -97,7 +95,8 @@ impl Plugin for Npuzzle {
 			)
 			.add_startup_system(camera_setup)
 			.add_startup_system(setup)
-			.add_system(keyboard_input);
+			.add_system(keyboard_input)
+			.add_system(make_move);
 	}
 }
 
@@ -130,7 +129,7 @@ fn keyboard_input(mut key_events: EventReader<KeyboardInput>, mut move_queue: Re
 fn make_move(
 	mut grid: ResMut<Grid2D>,
 	mut move_queue: ResMut<MoveQueue>,
-	query: Query<&mut Tile, With<Value>>,
+	mut query: Query<(&Value, &mut TilePosition), With<Tile>>,
 ) {
 	if !move_queue.is_empty() {
 		let current_move = move_queue.pop_front().unwrap();
@@ -139,6 +138,16 @@ fn make_move(
 			let new = grid.get_zero();
 			let val = grid.get_value(old).unwrap();
 			// now visu - put zero tile to new and tile with value in old
+			for (v, mut pos) in query.iter_mut() {
+				if v.0 == val {
+					pos.row = old.0 as usize;
+					pos.col = old.1 as usize;
+				}
+				if v.0 == 0 {
+					pos.row = new.0 as usize;
+					pos.col = new.1 as usize;
+				}
+			}
 		}
 	}
 }
@@ -171,7 +180,7 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>, grid: Res<Grid2
 						..Default::default()
 					},
 					visibility: Visibility {
-						is_visible: value != 0,
+						is_visible: true, //value != 0,
 					},
 					..Default::default()
 				})
