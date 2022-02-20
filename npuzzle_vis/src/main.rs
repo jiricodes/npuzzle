@@ -1,3 +1,5 @@
+use bevy::input::keyboard::KeyboardInput;
+use bevy::input::ElementState;
 use bevy::prelude::*;
 use npuzzle_lib::board::Board;
 
@@ -9,7 +11,7 @@ const TILE_COLOR: Color = Color::rgb(0.75, 0.5, 0.5);
 
 // Font
 const FONT_PATH: &str = "fonts/VCR_OSD_MONO.ttf";
-const FONT_SIZE: f32 = 0.5 * TILE_SIZE;
+const FONT_SIZE: f32 = 60.0;
 const FONT_COLOR: Color = Color::rgb(1.0, 1.0, 1.0);
 
 // Puzzle
@@ -43,7 +45,19 @@ impl Plugin for Npuzzle {
 			})
 			.insert_resource(board)
 			.add_startup_system(camera_setup)
-			.add_startup_system(setup);
+			.add_startup_system(setup)
+			.add_system(keyboard_input);
+	}
+}
+
+fn keyboard_input(mut key_events: EventReader<KeyboardInput>) {
+	for ev in key_events.iter() {
+		match ev.state {
+			ElementState::Released => {
+				println!("Key release: {:?} ({})", ev.key_code, ev.scan_code);
+			}
+			_ => {}
+		}
 	}
 }
 
@@ -85,11 +99,21 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>, board: Res<Boar
 						custom_size: Some(Vec2::new(TILE_SIZE, TILE_SIZE)),
 						..Default::default()
 					},
+					visibility: Visibility {
+						is_visible: value != 0,
+					},
 					..Default::default()
 				})
 				.with_children(|parent| {
 					parent.spawn_bundle(Text2dBundle {
 						text: Text::with_section(label, text_style.clone(), text_alignment),
+						transform: Transform {
+							translation: Vec3::new(0.0, 0.0, 1.0),
+							..Default::default()
+						},
+						visibility: Visibility {
+							is_visible: value != 0,
+						},
 						..Default::default()
 					});
 				})
