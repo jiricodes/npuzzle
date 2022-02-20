@@ -1,6 +1,6 @@
-use super::grid_traits::Grid;
-use super::status::{ErrorKind, PuzzleError, Result};
-use super::utils::is_in_bounds;
+use crate::grid_traits::Grid;
+use crate::utils::is_in_bounds;
+use crate::utils::status::{ErrorKind, PuzzleError, Result};
 use log::*;
 use rand::{seq::SliceRandom, thread_rng};
 use std::cmp::Eq;

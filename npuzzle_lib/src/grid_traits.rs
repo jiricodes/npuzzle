@@ -1,7 +1,7 @@
 //! Generic traits for possible grid implmentations
 //! will allow 2d vec, graph, linked lists or whatever
 
-use super::status::Result;
+use crate::utils::status::Result;
 
 pub trait Grid {
 	type M; // moves

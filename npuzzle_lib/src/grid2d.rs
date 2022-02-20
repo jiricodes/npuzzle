@@ -1,11 +1,11 @@
 //! 2D grid representation of the problem
-use super::grid_traits::Grid;
+use crate::grid_traits::Grid;
 use log::*;
 use std::cmp::PartialEq;
 use std::fmt;
 use std::ops::{Add, Sub};
 
-use super::{ErrorKind, PuzzleError, Result};
+use crate::utils::status::{ErrorKind, PuzzleError, Result};
 
 #[derive(Debug, Clone, Copy)]
 pub enum Direction {
@@ -45,7 +45,7 @@ impl Direction {
 
 /// Coordinates struct for Grid2D (row, column)
 #[derive(Debug, Clone, Copy, Hash, PartialEq, Eq)]
-pub struct Coords(i32, i32);
+pub struct Coords(pub i32, pub i32);
 
 impl Add for Coords {
 	type Output = Self;
@@ -106,6 +106,10 @@ impl Grid2D {
 			&& self.height > coords.0 as usize
 			&& coords.1 >= 0
 			&& self.width > coords.1 as usize
+	}
+
+	pub fn get_zero(&self) -> Coords {
+		self.zero_position
 	}
 }
 
