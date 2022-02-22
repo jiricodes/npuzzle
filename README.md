@@ -6,13 +6,13 @@ The goal is to find solution to given [N-puzzle](https://en.wikipedia.org/wiki/1
 
 ## Notes / Todo
 ### Visu
-- [ ] drag and drop file
 - [ ] game state
     - [ ] menu
     - [ ] game
     - [ ] endscreen
 - [ ] save and load settings
 - [ ] save current game
+- [ ] drag and drop file
 
 
 ### Organisation
