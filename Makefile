@@ -6,5 +6,8 @@ all:
 test:
 	@cargo test -- --nocapture
 
+vis:
+	cargo run -p npuzzle_vis
+
 doc:
 	cargo doc --no-deps --open
