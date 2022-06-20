@@ -12,6 +12,7 @@
         - https://www.youtube.com/watch?v=NXRIrP1k4dE&ab_channel=StevenBurrell
         - https://webdocs.cs.ualberta.ca/~hayward/396/jem/tile.html
     - could help with pruning perhaps
+- [simulating combinatorical strategies for variations of the 15-Puzzle](https://github.com/Kney-Delach/Elysium-Puzzle-Engine)
 
 ## [npuzzle.en.pdf](npuzzle.en.pdf)
 Given subject describing the problem, limitations, requirements and goals of this project.
